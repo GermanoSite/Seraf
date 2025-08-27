@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Aula Vai Acabar - Horário de Brasília</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            animation: fadeIn 1.5s ease-out;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            line-height: 1.4;
+            opacity: 0.95;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .clock-container {
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .time {
+            font-size: 5rem;
+            font-weight: 100;
+            letter-spacing: 3px;
+            text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            animation: glow 3s infinite alternate;
+            font-variant-numeric: tabular-nums;
+            position: relative;
+        }
+
+        @keyframes glow {
+            0% { 
+                text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.1); 
+            }
+            100% { 
+                text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.2); 
+            }
+        }
+
+        .date {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-top: 1.5rem;
+            opacity: 0.85;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .location {
+            font-size: 1rem;
+            margin-top: 2rem;
+            opacity: 0.75;
+            font-style: italic;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .background-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: moveShapes 20s infinite linear;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            right: 15%;
+            animation-delay: -7s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 40%;
+            right: 20%;
+            animation-delay: -14s;
+        }
+
+        @keyframes moveShapes {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 3rem 2rem;
+                margin: 1rem;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .time {
+                font-size: 3.5rem;
+                letter-spacing: 2px;
+            }
+            
+            .date {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.4rem;
+                margin-bottom: 2rem;
+            }
+            
+            .time {
+                font-size: 3rem;
+            }
+            
+            .container {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <h1 class="title">A aula vai acabar alguma hora<br>olhe o horário para saber</h1>
+        
+        <div class="clock-container">
+            <div class="time" id="clock">00:00:00</div>
+            <div class="date" id="date"></div>
+        </div>
+        
+        <div class="location">Brasília, Brasil</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            // Converter para horário de Brasília (UTC-3)
+            const brasiliaTime = new Date(now.getTime() - (3 * 60 * 60 * 1000));
+            
+            const hours = String(brasiliaTime.getUTCHours()).padStart(2, '0');
+            const minutes = String(brasiliaTime.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(brasiliaTime.getUTCSeconds()).padStart(2, '0');
+            
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Atualizar data
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                timeZone: 'America/Sao_Paulo'
+            };
+            
+            const dateString = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('date').textContent = dateString;
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+
+        // Atualizar relógio a cada segundo
+        updateClock();
+        setInterval(updateClock, 1000);
+        
+        // Criar partículas flutuantes com intervalo maior
+        setInterval(createParticle, 400);
+        
+        // Criar algumas partículas iniciais
+        for (let i = 0; i < 3; i++) {
+            setTimeout(createParticle, i * 1500);
+        }
+    </script>
+</body>
+</html>
