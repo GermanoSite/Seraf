@@ -150,6 +150,48 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        .schedule-notice {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            backdrop-filter: blur(25px);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulse-notice 2s infinite, slideIn 0.8s ease-out;
+            text-align: center;
+        }
+
+        .notice-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        @keyframes pulse-notice {
+            0%, 100% { 
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3), 0 0 20px rgba(255, 107, 107, 0.2);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5), 0 0 30px rgba(255, 107, 107, 0.4);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .schedule {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(15px);
@@ -498,6 +540,15 @@
         }
 
         @media (max-width: 768px) {
+            .schedule-notice {
+                margin: 0.5rem 0;
+                padding: 0.8rem 1rem;
+            }
+
+            .notice-text {
+                font-size: 0.85rem;
+            }
+
             .main-container {
                 gap: 1rem;
                 margin: 0.5rem;
@@ -559,6 +610,14 @@
         }
 
         @media (max-width: 480px) {
+            .schedule-notice {
+                padding: 0.6rem 0.8rem;
+            }
+
+            .notice-text {
+                font-size: 0.8rem;
+            }
+
             .title {
                 font-size: 1.3rem;
                 margin-bottom: 1.5rem;
@@ -598,6 +657,9 @@
                 <div class="period-title" id="currentPeriod">Carregando...</div>
                 <div class="period-time" id="currentTime">--:-- - --:--</div>
                 <div class="time-remaining" id="timeRemaining"></div>
+                <div class="schedule-notice" id="scheduleNotice" style="display: none;">
+                    <div class="notice-text" id="noticeText"></div>
+                </div>
             </div>
 
             <div class="schedule">
@@ -796,163 +858,4 @@
                 html += `
                     <div class="countdown-item ${status}">
                         <div class="countdown-period-name"><span class="emoji-pulse">${emoji}</span> ${period.name}</div>
-                        <div class="countdown-time-range">${period.start} - ${period.end}</div>
-                        <div class="countdown-timers">
-                            <div class="countdown-timer">
-                                <span class="countdown-label">Para começar:</span>
-                                <span class="countdown-value ${status === 'completed' ? 'completed' : ''}">${formatDetailedCountdown(Math.max(0, toStart))}</span>
-                            </div>
-                            <div class="countdown-timer">
-                                <span class="countdown-label">Para acabar:</span>
-                                <span class="countdown-value ${status === 'active' ? 'active' : status === 'completed' ? 'completed' : ''}">${formatDetailedCountdown(Math.max(0, toEnd))}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
-        }
-
-        function updatePeriodInfo() {
-            const current = getCurrentPeriod();
-            const periodTitle = document.getElementById('currentPeriod');
-            const currentTimeEl = document.getElementById('currentTime');
-            const timeRemaining = document.getElementById('timeRemaining');
-            
-            // Remove active class from all items
-            document.querySelectorAll('.schedule-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            if (current.period) {
-                const emoji = current.period.emoji || '📚';
-                
-                if (current.status === 'active') {
-                    periodTitle.innerHTML = `<span class="emoji-pulse">${emoji}</span> ${current.period.name} em andamento`;
-                    currentTimeEl.textContent = `${current.period.start} - ${current.period.end}`;
-                    timeRemaining.textContent = `Faltam ${formatDetailedCountdown(current.timeLeft)} para acabar`;
-                    
-                    // Highlight current period
-                    const activeItem = document.querySelector(`[data-period="${current.period.id}"]`);
-                    if (activeItem) activeItem.classList.add('active');
-                    
-                } else if (current.status === 'break') {
-                    periodTitle.innerHTML = `<span class="emoji-pulse">⏰</span> Próxima: ${current.period.name}`;
-                    currentTimeEl.textContent = `Começará às ${current.period.start}`;
-                    timeRemaining.textContent = `Faltam ${formatDetailedCountdown(current.timeLeft)}`;
-                    
-                } else if (current.status === 'before') {
-                    periodTitle.innerHTML = `<span class="emoji-bounce">🌅</span> Aulas ainda não começaram`;
-                    currentTimeEl.textContent = `Primeira aula às ${current.period.start}`;
-                    timeRemaining.textContent = `Faltam ${formatDetailedCountdown(current.timeLeft)}`;
-                }
-            } else {
-                periodTitle.innerHTML = '<span class="emoji-swing">🏠</span> Aulas terminaram';
-                currentTimeEl.textContent = 'Até amanhã!';
-                timeRemaining.textContent = '';
-            }
-        }
-
-        function checkForNotifications() {
-            const now = new Date();
-            const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-            const currentSeconds = now.getSeconds();
-            
-            // Só mostrar notificação no segundo 0 para evitar spam
-            if (currentSeconds !== 0) return;
-            
-            for (const period of schedule) {
-                const startEvent = `${period.id}-start`;
-                const endEvent = `${period.id}-end`;
-                
-                // Verificar início do período
-                if (currentTimeStr === period.start && lastNotifiedEvent !== startEvent) {
-                    const emoji = period.emoji || '📚';
-                    showNotification(`${emoji} ${period.name} começou!`);
-                    lastNotifiedEvent = startEvent;
-                    return;
-                }
-                
-                // Verificar fim do período
-                if (currentTimeStr === period.end && lastNotifiedEvent !== endEvent) {
-                    const emoji = period.emoji || '📚';
-                    showNotification(`${emoji} ${period.name} acabou!`, true);
-                    lastNotifiedEvent = endEvent;
-                    return;
-                }
-            }
-        }
-
-        function updateClock() {
-            const now = new Date();
-            
-            // Converter para horário de Brasília (UTC-3)
-            const brasiliaTime = new Date(now.getTime() - (3 * 60 * 60 * 1000));
-            
-            const hours = String(brasiliaTime.getUTCHours()).padStart(2, '0');
-            const minutes = String(brasiliaTime.getUTCMinutes()).padStart(2, '0');
-            const seconds = String(brasiliaTime.getUTCSeconds()).padStart(2, '0');
-            
-            const clockElement = document.getElementById('clock');
-            const newTime = `${hours}:${minutes}:${seconds}`;
-            
-            // Animar mudança de segundo
-            if (clockElement.textContent !== newTime) {
-                clockElement.classList.add('tick');
-                setTimeout(() => {
-                    clockElement.classList.remove('tick');
-                }, 250);
-            }
-            
-            clockElement.textContent = newTime;
-            
-            // Atualizar data
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                timeZone: 'America/Sao_Paulo'
-            };
-            
-            const dateString = now.toLocaleDateString('pt-BR', options);
-            document.getElementById('date').textContent = dateString;
-            
-            // Atualizar informações do período
-            updatePeriodInfo();
-            
-            // Atualizar contadores
-            updateCountdowns();
-            
-            // Verificar notificações
-            checkForNotifications();
-        }
-
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 8 + 's';
-            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-            
-            document.getElementById('particles').appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 8000);
-        }
-
-        // Inicializar
-        updateClock();
-        addEmojiAnimations();
-        setInterval(updateClock, 1000);
-        setInterval(createParticle, 400);
-        
-        // Criar algumas partículas iniciais
-        for (let i = 0; i < 3; i++) {
-            setTimeout(createParticle, i * 1500);
-        }
-    </script>
-</body>
-</html>
+                        <div class="countdown-time-range">${period.start} - ${perio
