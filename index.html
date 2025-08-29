@@ -849,8 +849,20 @@
                 }
             } else {
                 periodTitle.innerHTML = '<span class="emoji-swing">🏠</span> Aulas terminaram';
-                currentTimeEl.textContent = 'Até amanhã!';
-                timeRemaining.textContent = '';
+
+const today = new Date();
+const dayOfWeek = today.getDay(); // 0 = domingo, 6 = sábado
+
+if (dayOfWeek === 6) { // sábado
+    currentTimeEl.textContent = 'Até segunda!';
+} else if (dayOfWeek === 0) { // domingo
+    currentTimeEl.textContent = 'Até segunda!';
+} else { // segunda a sexta
+    currentTimeEl.textContent = 'Até amanhã!';
+}
+
+timeRemaining.textContent = '';
+
             }
         }
 
