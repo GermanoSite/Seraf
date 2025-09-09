@@ -915,11 +915,16 @@
         // Initialize scroll reveal
         document.addEventListener('DOMContentLoaded', scrollReveal);
 
-        // Configuração adicional para garantir autoplay
+        // Configuração adicional para garantir autoplay do YouTube
         window.addEventListener('load', function() {
             // Tentar ativar autoplay após carregamento completo
             setTimeout(() => {
-                const iframe = document.getElementById('vimeo-player');
-                iframe.contentWindow.postMessage('{"method":"play"}', '*');
+                const iframe = document.getElementById('youtube-player');
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                
+                // Se não for mobile, tentar desmutar
+                if (!isMobileDevice()) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                }
             }, 3000);
         });
