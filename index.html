@@ -463,6 +463,16 @@
             box-shadow: 0 20px 40px rgba(37, 211, 102, 0.4);
         }
 
+        .button-members {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            box-shadow: 0 10px 25px rgba(31, 41, 55, 0.3);
+        }
+
+        .button-members:hover {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            box-shadow: 0 20px 40px rgba(31, 41, 55, 0.4);
+        }
+
         /* Social Media Grid - Perfect Organization */
         .social-grid {
             display: grid;
@@ -584,23 +594,12 @@
             transform: translateY(20px) scale(0.98);
         }
 
-        .member-area p {
-            color: #e2e8f0;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .member-area a {
-            color: #a5b4fc;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid transparent;
-        }
-
-        .member-area a:hover {
-            color: #c7d2fe;
-            border-bottom-color: #a5b4fc;
+        .member-area h3 {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
         /* Responsive Design - Perfect Organization */
@@ -804,6 +803,85 @@
 
         <!-- Member Area -->
         <section class="member-area">
-            <p>
-                Caso você já seja 
-                <a href="#" onclick="alert('Link para área de membros - Configure aqui!')">membro da Legacy Vision</a>.
+            <h3>Área de Membros - Legacy Vision Academy</h3>
+            <a href="https://legacyvision.academy" 
+               target="_blank" 
+               class="primary-button button-members ripple-effect">
+                Acessar Área de Membros
+            </a>
+        </section>
+    </div>
+
+    <script>
+        // Particles System
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = `particle particle-${Math.floor(Math.random() * 3) + 1}`;
+            
+            const size = Math.random() * 8 + 4;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.opacity = Math.random() * 0.8 + 0.2;
+            
+            document.getElementById('particles-container').appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle && particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }, 20000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+
+        // Ripple Effect
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.ripple-effect')) {
+                const button = e.target.closest('.ripple-effect');
+                const rect = button.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+        });
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Initial particles
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => createParticle(), i * 1000);
+        }
+    </script>
+</body>
+</html>
