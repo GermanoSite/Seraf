@@ -1,9 +1,4 @@
-<script>
-        // Auto-unmute video after user interaction
-        let hasInteracted = false;
-        
-        function enableAutoSound() {
-            if (!hasInteracted) {<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -126,7 +121,7 @@
             z-index: 10;
         }
 
-        /* Video Section - CORRIGIDO PARA FORMATO VERTICAL */
+        /* Video Section - CONFIGURADO PARA AUTOPLAY */
         .video-section {
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -160,8 +155,8 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 280px; /* Reduzido para melhor proporção */
-            aspect-ratio: 9/16; /* Usando aspect-ratio moderno */
+            max-width: 280px;
+            aspect-ratio: 9/16;
             border-radius: 1.5rem;
             overflow: hidden;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
@@ -176,6 +171,30 @@
             height: 100%;
             border: none;
             border-radius: 1.5rem;
+        }
+
+        /* Botão de Unmute para mobile */
+        .unmute-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .unmute-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.05);
         }
 
         .video-section::before {
@@ -521,7 +540,7 @@
             }
             
             .video-wrapper {
-                max-width: 240px; /* Melhor tamanho para mobile */
+                max-width: 240px;
             }
             
             .section-title {
@@ -540,7 +559,7 @@
 
         @media (max-width: 480px) {
             .video-wrapper {
-                max-width: 200px; /* Compacto mas proporcional */
+                max-width: 200px;
             }
         }
 
@@ -589,14 +608,14 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="vimeo-player"
-                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1" 
+                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1" 
                         frameborder="0" 
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
                         allowfullscreen
                         loading="lazy"
-                        title="Tutorial"
-                        style="object-fit: cover;">
+                        title="Tutorial">
                     </iframe>
+                    <button class="unmute-button" id="unmute-button" onclick="enableAutoplayWithSound()">🔊 Ativar Som</button>
                 </div>
             </div>
             
@@ -727,76 +746,36 @@
     </div>
 
     <script>
-        // Particles System
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = `particle particle-${Math.floor(Math.random() * 3) + 1}`;
-            
-            const size = Math.random() * 8 + 4;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.opacity = Math.random() * 0.8 + 0.2;
-            
-            document.getElementById('particles-container').appendChild(particle);
-            
-            setTimeout(() => {
-                if (particle && particle.parentNode) {
-                    particle.parentNode.removeChild(particle);
-                }
-            }, 20000);
+        // Detecção de dispositivo mobile
+        function isMobileDevice() {
+            return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
         }
 
-        // Create particles periodically
-        setInterval(createParticle, 2000);
-
-        // Ripple Effect
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.ripple-effect')) {
-                const button = e.target.closest('.ripple-effect');
-                const rect = button.getBoundingClientRect();
-                const ripple = document.createElement('span');
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = size + 'px';
-                ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                ripple.classList.add('ripple');
-                
-                button.appendChild(ripple);
-                
-                setTimeout(() => {
-                    if (ripple && ripple.parentNode) {
-                        ripple.parentNode.removeChild(ripple);
-                    }
-                }, 600);
+        // Configuração do vídeo com autoplay
+        function setupVideoAutoplay() {
+            const iframe = document.getElementById('vimeo-player');
+            const unmuteButton = document.getElementById('unmute-button');
+            
+            // Configurar autoplay baseado no dispositivo
+            if (isMobileDevice()) {
+                // Mobile: autoplay mudo inicialmente com botão para ativar som
+                iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
+                unmuteButton.style.display = 'block';
+            } else {
+                // Desktop: tentar autoplay com som
+                iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
+                unmuteButton.style.display = 'none';
             }
-        });
-
-        // Scroll reveal animation
-        function scrollReveal() {
-            const reveals = document.querySelectorAll('.scroll-reveal');
-            
-            reveals.forEach(reveal => {
-                const windowHeight = window.innerHeight;
-                const elementTop = reveal.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('revealed');
-                } else {
-                    reveal.classList.remove('revealed');
-                }
-            });
         }
 
-        window.addEventListener('scroll', scrollReveal);
-        
-        // Initialize scroll reveal
-        document.addEventListener('DOMContentLoaded', scrollReveal);
-    </script>
-</body>
-</html>
+        // Função para ativar autoplay com som (mobile)
+        function enableAutoplayWithSound() {
+            const iframe = document.getElementById('vimeo-player');
+            const unmuteButton = document.getElementById('unmute-button');
+            
+            // Recarregar iframe com som ativado
+            iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
+            unmuteButton.style.display = 'none';
+            
+            // Força interação do usuário para ativar autoplay com som
+            setTimeout
