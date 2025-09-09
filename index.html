@@ -727,27 +727,6 @@
     </div>
 
     <script>
-        // Auto-unmute video after user interaction
-        let hasInteracted = false;
-        
-        function enableAutoSound() {
-            if (!hasInteracted) {
-                hasInteracted = true;
-                const iframe = document.getElementById('vimeo-player');
-                // Re-load iframe with sound enabled
-                iframe.src = iframe.src.replace('muted=0', 'muted=0');
-                
-                // Try to unmute using postMessage to Vimeo
-                iframe.contentWindow?.postMessage('{"method":"setVolume","value":1}', '*');
-            }
-        }
-
-        // Listen for any user interaction to enable sound
-        document.addEventListener('click', enableAutoSound);
-        document.addEventListener('scroll', enableAutoSound);
-        document.addEventListener('keydown', enableAutoSound);
-        document.addEventListener('touchstart', enableAutoSound);
-
         // Particles System
         function createParticle() {
             const particle = document.createElement('div');
