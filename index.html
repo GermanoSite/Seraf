@@ -172,45 +172,6 @@
             border-radius: 1.5rem;
         }
 
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 1.5rem;
-            transition: opacity 0.5s ease;
-        }
-
-        .video-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loading-spinner {
-            text-align: center;
-            color: white;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .video-section::before {
             content: '';
             position: absolute;
@@ -612,19 +573,13 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="vimeo-player"
-                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&background=1&title=0&byline=0&portrait=0&controls=0" 
+                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&background=0&title=0&byline=0&portrait=0&controls=1" 
                         frameborder="0" 
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
                         allowfullscreen
                         loading="lazy"
                         title="Tutorial">
                     </iframe>
-                    <div class="video-overlay" id="video-overlay">
-                        <div class="loading-spinner">
-                            <div class="spinner"></div>
-                            <p>Carregando vídeo...</p>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -778,12 +733,6 @@
         // Create particles periodically
         setInterval(createParticle, 2000);
 
-        // YouTube Player Management - Simplified
-        document.addEventListener('DOMContentLoaded', function() {
-            // No overlay management needed since we removed it
-            console.log('YouTube player initialized');
-        });
-
         // Ripple Effect
         document.addEventListener('click', function(e) {
             if (e.target.closest('.ripple-effect')) {
@@ -794,4 +743,43 @@
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
                 
-                ripple.style.width
+                ripple.style.width = size + 'px';
+                ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    if (ripple && ripple.parentNode) {
+                        ripple.parentNode.removeChild(ripple);
+                    }
+                }, 600);
+            }
+        });
+
+        // Scroll reveal animation
+        function scrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('revealed');
+                } else {
+                    reveal.classList.remove('revealed');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', scrollReveal);
+        
+        // Initialize scroll reveal
+        document.addEventListener('DOMContentLoaded', scrollReveal);
+    </script>
+</body>
+</html>
