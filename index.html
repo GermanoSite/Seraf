@@ -778,27 +778,10 @@
         // Create particles periodically
         setInterval(createParticle, 2000);
 
-        // YouTube Player Management
-        function initializeYouTubePlayer() {
-            const iframe = document.getElementById('youtube-player');
-            const overlay = document.getElementById('video-overlay');
-            
-            // Hide loading overlay after iframe loads
-            iframe.addEventListener('load', function() {
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 2000);
-            });
-            
-            // Fallback: hide overlay after 6 seconds regardless
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 6000);
-        }
-
-        // Initialize video player when page loads
+        // YouTube Player Management - Simplified
         document.addEventListener('DOMContentLoaded', function() {
-            initializeYouTubePlayer();
+            // No overlay management needed since we removed it
+            console.log('YouTube player initialized');
         });
 
         // Ripple Effect
