@@ -156,13 +156,12 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 350px; /* Largura máxima para vídeos verticais */
-            height: 0;
-            padding-bottom: 177.78%; /* Proporção 9:16 (vertical) ao invés de 16:9 */
+            max-width: 280px; /* Reduzido para melhor proporção */
+            aspect-ratio: 9/16; /* Usando aspect-ratio moderno */
             border-radius: 1.5rem;
             overflow: hidden;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            background: #000;
+            background: transparent;
         }
 
         .video-wrapper iframe {
@@ -173,7 +172,6 @@
             height: 100%;
             border: none;
             border-radius: 1.5rem;
-            object-fit: cover; /* Garante que o vídeo preencha sem barras pretas */
         }
 
         .video-section::before {
@@ -519,8 +517,7 @@
             }
             
             .video-wrapper {
-                max-width: 200px; /* Ainda mais compacto no mobile */
-                padding-bottom: 120%; /* Proporção ajustada para mobile */
+                max-width: 240px; /* Melhor tamanho para mobile */
             }
             
             .section-title {
@@ -539,8 +536,7 @@
 
         @media (max-width: 480px) {
             .video-wrapper {
-                max-width: 180px; /* Bem compacto para telas pequenas */
-                padding-bottom: 110%;
+                max-width: 200px; /* Compacto mas proporcional */
             }
         }
 
@@ -589,12 +585,13 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="vimeo-player"
-                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0" 
+                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1" 
                         frameborder="0" 
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
                         allowfullscreen
                         loading="lazy"
-                        title="Tutorial">
+                        title="Tutorial"
+                        style="object-fit: cover;">
                     </iframe>
                 </div>
             </div>
