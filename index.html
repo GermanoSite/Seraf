@@ -121,7 +121,7 @@
             z-index: 10;
         }
 
-        /* Video Section - CONFIGURADO PARA AUTOPLAY */
+        /* Video Section - MELHOR CONFIGURAÇÃO DE AUTOPLAY */
         .video-section {
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -173,7 +173,54 @@
             border-radius: 1.5rem;
         }
 
+        /* Botão de Ativar Som - Melhorado */
+        .sound-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+        .sound-control:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        .sound-control.sound-on {
+            background: rgba(34, 197, 94, 0.8);
+        }
+
+        .sound-control.sound-on:hover {
+            background: rgba(34, 197, 94, 0.9);
+        }
+
+        /* Indicador de status do vídeo */
+        .video-status {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
 
         .video-section::before {
             content: '';
@@ -533,6 +580,13 @@
             .social-button {
                 padding: 1rem;
             }
+
+            .sound-control {
+                top: 10px;
+                right: 10px;
+                padding: 10px 14px;
+                font-size: 12px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -586,14 +640,21 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="vimeo-player"
-                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1" 
+                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1" 
                         frameborder="0" 
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
                         allowfullscreen
                         loading="lazy"
                         title="Tutorial">
                     </iframe>
-                    <button class="unmute-button" id="unmute-button" onclick="enableAutoplayWithSound()">🔊 Ativar Som</button>
+                    
+                    <button class="sound-control" id="sound-control" onclick="toggleSound()">
+                        🔊 Ativar Som
+                    </button>
+                    
+                    <div class="video-status" id="video-status">
+                        Vídeo carregando...
+                    </div>
                 </div>
             </div>
             
@@ -724,185 +785,21 @@
     </div>
 
     <script>
-        // Detecção de dispositivo mobile
+        // Estado global do som
+        let soundEnabled = false;
+        let vimeoPlayer = null;
+
+        // Detecção de dispositivo
         function isMobileDevice() {
-            return /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-        }
-
-        // Configuração do vídeo com autoplay
-        function setupVideoAutoplay() {
-            const iframe = document.getElementById('vimeo-player');
-            const unmuteButton = document.getElementById('unmute-button');
-            
-            // Configurar autoplay baseado no dispositivo
-            if (isMobileDevice()) {
-                // Mobile: autoplay mudo inicialmente com botão para ativar som
-                iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
-                unmuteButton.style.display = 'block';
-            } else {
-                // Desktop: tentar autoplay com som
-                iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
-                unmuteButton.style.display = 'none';
-            }
-        }
-
-        // Função para ativar autoplay com som (mobile)
-        function enableAutoplayWithSound() {
-            const iframe = document.getElementById('vimeo-player');
-            const unmuteButton = document.getElementById('unmute-button');
-            
-            // Recarregar iframe com som ativado
-            iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1&background=1";
-            unmuteButton.style.display = 'none';
-            
-            // Força interação do usuário para ativar autoplay com som
-            setTimeout(() => {
-                iframe.contentWindow.postMessage('{"method":"setVolume","value":1}', '*');
-            }, 1000);
-        }
-
-        // Tentar forçar autoplay com som no carregamento
-        function forceAutoplayWithSound() {
-            try {
-                // Criar um contexto de áudio para bypass de políticas
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                audioContext.resume().then(() => {
-                    console.log('Áudio desbloqueado com sucesso');
-                });
-            } catch (e) {
-                console.log('AudioContext não suportado');
-            }
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
         }
 
         // Configuração avançada do Vimeo Player
-        function setupAdvancedVimeoPlayer() {
+        function initializeVimeoPlayer() {
             const iframe = document.getElementById('vimeo-player');
+            const soundControl = document.getElementById('sound-control');
             
-            // Listener para quando o iframe carregar
-            iframe.addEventListener('load', function() {
-                // Tentar ativar o som após o carregamento
-                setTimeout(() => {
-                    iframe.contentWindow.postMessage('{"method":"setVolume","value":1}', '*');
-                    iframe.contentWindow.postMessage('{"method":"play"}', '*');
-                }, 2000);
-            });
-        }
-
-        // Detecção de interação do usuário para ativar áudio
-        function setupUserInteractionDetection() {
-            let hasInteracted = false;
+            // Configurar iframe com autoplay mudo inicialmente
+            iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1";
             
-            function enableAudioOnInteraction() {
-                if (!hasInteracted) {
-                    hasInteracted = true;
-                    const iframe = document.getElementById('vimeo-player');
-                    
-                    // Ativar som no vídeo
-                    iframe.contentWindow.postMessage('{"method":"setVolume","value":1}', '*');
-                    iframe.contentWindow.postMessage('{"method":"play"}', '*');
-                    
-                    // Remover listeners após primeira interação
-                    document.removeEventListener('click', enableAudioOnInteraction);
-                    document.removeEventListener('touchstart', enableAudioOnInteraction);
-                    document.removeEventListener('keydown', enableAudioOnInteraction);
-                }
-            }
-            
-            // Adicionar listeners para detectar interação
-            document.addEventListener('click', enableAudioOnInteraction);
-            document.addEventListener('touchstart', enableAudioOnInteraction);
-            document.addEventListener('keydown', enableAudioOnInteraction);
-        }
-
-        // Inicialização quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            setupVideoAutoplay();
-            forceAutoplayWithSound();
-            setupAdvancedVimeoPlayer();
-            setupUserInteractionDetection();
-        });
-
-        // Particles System
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = `particle particle-${Math.floor(Math.random() * 3) + 1}`;
-            
-            const size = Math.random() * 8 + 4;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.opacity = Math.random() * 0.8 + 0.2;
-            
-            document.getElementById('particles-container').appendChild(particle);
-            
-            setTimeout(() => {
-                if (particle && particle.parentNode) {
-                    particle.parentNode.removeChild(particle);
-                }
-            }, 20000);
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 2000);
-
-        // Ripple Effect
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.ripple-effect')) {
-                const button = e.target.closest('.ripple-effect');
-                const rect = button.getBoundingClientRect();
-                const ripple = document.createElement('span');
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = size + 'px';
-                ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                ripple.classList.add('ripple');
-                
-                button.appendChild(ripple);
-                
-                setTimeout(() => {
-                    if (ripple && ripple.parentNode) {
-                        ripple.parentNode.removeChild(ripple);
-                    }
-                }, 600);
-            }
-        });
-
-        // Scroll reveal animation
-        function scrollReveal() {
-            const reveals = document.querySelectorAll('.scroll-reveal');
-            
-            reveals.forEach(reveal => {
-                const windowHeight = window.innerHeight;
-                const elementTop = reveal.getBoundingClientRect().top;
-                const elementVisible = 150;
-                
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('revealed');
-                } else {
-                    reveal.classList.remove('revealed');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', scrollReveal);
-        
-        // Initialize scroll reveal
-        document.addEventListener('DOMContentLoaded', scrollReveal);
-
-        // Configuração adicional para garantir autoplay do YouTube
-        window.addEventListener('load', function() {
-            // Tentar ativar autoplay após carregamento completo
-            setTimeout(() => {
-                const iframe = document.getElementById('youtube-player');
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                
-                // Se não for mobile, tentar desmutar
-                if (!isMobileDevice()) {
-                    iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-                }
-            }, 3000);
-        });
+            // Configurar Player API do V
