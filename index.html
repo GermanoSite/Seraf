@@ -121,7 +121,7 @@
             z-index: 10;
         }
 
-        /* Video Section - MELHOR CONFIGURAÇÃO DE AUTOPLAY */
+        /* Video Section - Som Automático */
         .video-section {
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -171,55 +171,6 @@
             height: 100%;
             border: none;
             border-radius: 1.5rem;
-        }
-
-        /* Botão de Ativar Som - Melhorado */
-        .sound-control {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sound-control:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.05);
-        }
-
-        .sound-control.sound-on {
-            background: rgba(34, 197, 94, 0.8);
-        }
-
-        .sound-control.sound-on:hover {
-            background: rgba(34, 197, 94, 0.9);
-        }
-
-        /* Indicador de status do vídeo */
-        .video-status {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            backdrop-filter: blur(10px);
-            display: none;
         }
 
         .video-section::before {
@@ -580,13 +531,6 @@
             .social-button {
                 padding: 1rem;
             }
-
-            .sound-control {
-                top: 10px;
-                right: 10px;
-                padding: 10px 14px;
-                font-size: 12px;
-            }
         }
 
         @media (max-width: 480px) {
@@ -640,21 +584,13 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="vimeo-player"
-                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1" 
+                        src="https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=0&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1" 
                         frameborder="0" 
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write" 
                         allowfullscreen
                         loading="lazy"
                         title="Tutorial">
                     </iframe>
-                    
-                    <button class="sound-control" id="sound-control" onclick="toggleSound()">
-                        🔊 Ativar Som
-                    </button>
-                    
-                    <div class="video-status" id="video-status">
-                        Vídeo carregando...
-                    </div>
                 </div>
             </div>
             
@@ -785,21 +721,80 @@
     </div>
 
     <script>
-        // Estado global do som
-        let soundEnabled = false;
-        let vimeoPlayer = null;
-
-        // Detecção de dispositivo
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        // Sistema de partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles-container');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                const size = Math.random() * 8 + 4;
+                const type = Math.floor(Math.random() * 3) + 1;
+                
+                particle.classList.add('particle', `particle-${type}`);
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, type === 1 ? 15000 : type === 2 ? 18000 : 12000);
+            }
+            
+            setInterval(createParticle, 800);
         }
 
-        // Configuração avançada do Vimeo Player
-        function initializeVimeoPlayer() {
-            const iframe = document.getElementById('vimeo-player');
-            const soundControl = document.getElementById('sound-control');
+        // Efeito ripple nos botões
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
             
-            // Configurar iframe com autoplay mudo inicialmente
-            iframe.src = "https://player.vimeo.com/video/1112982996?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&transparent=0&responsive=1&controls=1";
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
             
-            // Configurar Player API do V
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Animação de scroll reveal
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('revealed');
+                }
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Adicionar efeito ripple a todos os botões
+            document.querySelectorAll('.ripple-effect').forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
+            
+            // Adicionar scroll reveal
+            window.addEventListener('scroll', handleScrollReveal);
+            handleScrollReveal(); // Executar uma vez no carregamento
+        });
+    </script>
+</body>
+</html>
