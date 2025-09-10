@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legacy Vision Academy - Som Ativado</title>
+    <title>Legacy Vision Academy - Seraf</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
@@ -15,9 +15,18 @@
 
         :root {
             --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+            --secondary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+            --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #ec4899 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
             --shadow-primary: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 35px 60px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -25,9 +34,30 @@
             background: var(--primary-gradient);
             background-attachment: fixed;
             min-height: 100vh;
-            color: white;
+            color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         /* Overlay de Som */
@@ -96,6 +126,7 @@
             margin-bottom: 2rem;
             opacity: 0.9;
             line-height: 1.5;
+            color: white;
         }
 
         .sound-button {
@@ -136,6 +167,7 @@
             transition: all 0.3s ease;
             z-index: 100;
             font-size: 1.5rem;
+            color: white;
         }
 
         .sound-control:hover {
@@ -147,7 +179,78 @@
             opacity: 0.6;
         }
 
-        /* Rest of your original styles */
+        /* Notificação */
+        .sound-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 200;
+        }
+
+        .sound-notification.show {
+            transform: translateX(0);
+        }
+
+        /* Advanced Particles */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .particle-1 {
+            background: linear-gradient(45deg, #60a5fa, #a78bfa);
+            animation: float1 15s linear infinite;
+        }
+
+        .particle-2 {
+            background: linear-gradient(45deg, #fbbf24, #f472b6);
+            animation: float2 18s linear infinite;
+        }
+
+        .particle-3 {
+            background: linear-gradient(45deg, #34d399, #60a5fa);
+            animation: float3 12s linear infinite;
+        }
+
+        @keyframes float1 {
+            0% { transform: translateY(100vh) translateX(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes float2 {
+            0% { transform: translateY(100vh) translateX(100px) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.6; }
+            85% { opacity: 0.6; }
+            100% { transform: translateY(-100px) translateX(-100px) rotate(-360deg); opacity: 0; }
+        }
+
+        @keyframes float3 {
+            0% { transform: translateY(100vh) translateX(0px) rotate(0deg) scale(0.5); opacity: 0; }
+            20% { opacity: 0.4; }
+            80% { opacity: 0.4; }
+            100% { transform: translateY(-100px) translateX(0px) rotate(180deg) scale(1.5); opacity: 0; }
+        }
+
         .main-container {
             max-width: 800px;
             margin: 0 auto;
@@ -156,6 +259,7 @@
             z-index: 10;
         }
 
+        /* Video Section */
         .video-section {
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -166,7 +270,17 @@
             box-shadow: var(--shadow-primary);
             position: relative;
             overflow: hidden;
+            animation: slideInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(40px);
             text-align: center;
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .video-container {
@@ -197,6 +311,23 @@
             border-radius: 1.5rem;
         }
 
+        .video-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Profile Info */
         .profile-info {
             display: flex;
             align-items: center;
@@ -220,7 +351,13 @@
             color: white;
             font-weight: 700;
             font-size: 24px;
+            animation: avatarRotate 15s linear infinite;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes avatarRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .profile-text {
@@ -238,23 +375,350 @@
             font-size: 0.95rem;
         }
 
-        /* Notification */
-        .sound-notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            transform: translateX(100%);
+        /* Content Sections */
+        .content-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-primary);
+            position: relative;
+            overflow: hidden;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 200;
+            animation: fadeInScale 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
         }
 
-        .sound-notification.show {
-            transform: translateX(0);
+        .content-section:nth-child(3) { animation-delay: 0.4s; }
+        .content-section:nth-child(4) { animation-delay: 0.6s; }
+        .content-section:nth-child(5) { animation-delay: 0.8s; }
+        .content-section:nth-child(6) { animation-delay: 1s; }
+        .content-section:nth-child(7) { animation-delay: 1.2s; }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .content-section:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: var(--shadow-hover);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-emoji {
+            font-size: 2.5rem;
+            animation: emojiFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes emojiFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(2deg); }
+            75% { transform: translateY(-4px) rotate(-2deg); }
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        /* Button System */
+        .primary-button {
+            display: block;
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .primary-button:hover::before {
+            left: 100%;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a63d8 0%, #6a4c93 100%);
+        }
+
+        .primary-button:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        /* Specialized Button Variants */
+        .button-playlist {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .button-playlist:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #ff7979 100%);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .button-whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        .button-whatsapp:hover {
+            background: linear-gradient(135deg, #20c958 0%, #0e6b5c 100%);
+            box-shadow: 0 20px 40px rgba(37, 211, 102, 0.4);
+        }
+
+        .button-members {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            box-shadow: 0 10px 25px rgba(31, 41, 55, 0.3);
+        }
+
+        .button-members:hover {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            box-shadow: 0 20px 40px rgba(31, 41, 55, 0.4);
+        }
+
+        /* Social Media Grid */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-button {
+            padding: 1rem 1.5rem;
+            border-radius: 0.875rem;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-youtube {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+        }
+
+        .social-youtube:hover {
+            background: linear-gradient(135deg, #e60000 0%, #b30000 100%);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.4);
+        }
+
+        .social-instagram {
+            background: linear-gradient(135deg, #e4405f 0%, #833ab4 100%);
+        }
+
+        .social-instagram:hover {
+            background: linear-gradient(135deg, #d73447 0%, #7209b7 100%);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(228, 64, 95, 0.4);
+        }
+
+        .social-tiktok {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+        }
+
+        .social-tiktok:hover {
+            background: linear-gradient(135deg, #1a1a1a 0%, #4d4d4d 100%);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Community Cards */
+        .community-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .community-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .community-card:hover::before {
+            left: 0;
+        }
+
+        .community-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(8px) translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .community-title {
+            color: #e2e8f0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .community-link {
+            color: #a5b4fc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .community-link:hover {
+            color: #c7d2fe;
+        }
+
+        /* Member Area */
+        .member-area {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 2rem;
+            animation: fadeInScale 1s cubic-bezier(0.4, 0, 0.2, 1) 1.4s forwards;
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+        }
+
+        .member-area h3 {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem 0.75rem;
+            }
+            
+            .video-section,
+            .content-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .video-wrapper {
+                max-width: 240px;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+            
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .primary-button,
+            .social-button {
+                padding: 1rem;
+            }
+
+            .sound-prompt {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .sound-control {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-wrapper {
+                max-width: 200px;
+            }
+        }
+
+        /* Loading States and Micro-interactions */
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -265,7 +729,7 @@
             <div class="sound-icon">🔊</div>
             <h2 class="sound-title">Ativar Som</h2>
             <p class="sound-description">
-                Clique para ativar o áudio e ter uma experiência completa no site!
+                Clique para ativar o áudio e ter uma experiência completa no site da Legacy Vision Academy!
             </p>
             <button class="sound-button" id="enableSoundBtn">
                 🎵 Ativar Som Agora
@@ -282,6 +746,9 @@
     <div class="sound-notification" id="soundNotification">
         ✅ Som ativado com sucesso!
     </div>
+
+    <!-- Advanced Particles System -->
+    <div class="particles-container" id="particles-container"></div>
 
     <div class="main-container">
         <!-- Video Section -->
@@ -308,116 +775,71 @@
                 </div>
             </div>
         </section>
-    </div>
 
-    <script src="https://player.vimeo.com/api/player.js"></script>
-    <script>
-        let isSoundEnabled = false;
-        let vimeoPlayer = null;
+        <!-- Section 1: Playlist -->
+        <section class="content-section">
+            <div class="section-header">
+                <span class="section-emoji">🎥</span>
+                <h2 class="section-title">Playlist de Aulas Grátis</h2>
+            </div>
+            <a href="https://www.youtube.com/playlist?list=PLmgOoF1Y0jw_v5jwlPSBRHHThnWcTjJZG" 
+               target="_blank" 
+               class="primary-button button-playlist ripple-effect">
+                Assistir Playlist Completa
+            </a>
+        </section>
 
-        // Inicializar player Vimeo
-        function initializeVimeoPlayer() {
-            const iframe = document.getElementById('vimeo-player');
-            vimeoPlayer = new Vimeo.Player(iframe);
-            
-            // Configurar volume inicial
-            if (isSoundEnabled) {
-                vimeoPlayer.setVolume(1);
-            } else {
-                vimeoPlayer.setVolume(0);
-            }
-        }
+        <!-- Section 2: Social Media -->
+        <section class="content-section">
+            <div class="section-header">
+                <span class="section-emoji">📺</span>
+                <h2 class="section-title">Minhas Redes Sociais:</h2>
+            </div>
+            <div class="social-grid">
+                <a href="https://www.youtube.com/@euseraf" 
+                   target="_blank" 
+                   class="social-button social-youtube ripple-effect">
+                    Youtube Principal
+                </a>
+                <a href="https://www.youtube.com/@serafimyoutube" 
+                   target="_blank" 
+                   class="social-button social-youtube ripple-effect">
+                    Youtube Algoritmo
+                </a>
+                <a href="https://www.instagram.com/euseraf" 
+                   target="_blank" 
+                   class="social-button social-instagram ripple-effect">
+                    Instagram
+                </a>
+                <a href="https://www.tiktok.com/@euseraf" 
+                   target="_blank" 
+                   class="social-button social-tiktok ripple-effect">
+                    TikTok
+                </a>
+            </div>
+        </section>
 
-        // Ativar som
-        function enableSound() {
-            isSoundEnabled = true;
-            
-            // Esconder overlay
-            const overlay = document.getElementById('soundOverlay');
-            overlay.classList.add('hidden');
-            
-            // Ativar som no vídeo
-            if (vimeoPlayer) {
-                vimeoPlayer.setVolume(1);
-            }
-            
-            // Atualizar controle de som
-            updateSoundControl();
-            
-            // Mostrar notificação
-            showNotification();
-            
-            // Salvar preferência
-            localStorage.setItem('soundEnabled', 'true');
-        }
+        <!-- Section 3: Training -->
+        <section class="content-section">
+            <div class="section-header">
+                <span class="section-emoji">🚀</span>
+                <h2 class="section-title">Treinamento da Legacy Vision Academy</h2>
+            </div>
+            <a href="https://legacyvision.framer.website" 
+               target="_blank" 
+               class="primary-button ripple-effect">
+                Acessar Treinamento Completo
+            </a>
+        </section>
 
-        // Alternar som
-        function toggleSound() {
-            if (isSoundEnabled) {
-                // Desativar som
-                isSoundEnabled = false;
-                if (vimeoPlayer) {
-                    vimeoPlayer.setVolume(0);
-                }
-                localStorage.setItem('soundEnabled', 'false');
-            } else {
-                // Ativar som
-                isSoundEnabled = true;
-                if (vimeoPlayer) {
-                    vimeoPlayer.setVolume(1);
-                }
-                localStorage.setItem('soundEnabled', 'true');
-                showNotification();
-            }
+        <!-- Section 4: Communities -->
+        <section class="content-section">
+            <div class="section-header">
+                <span class="section-emoji">🌍</span>
+                <h2 class="section-title">Minhas Comunidades:</h2>
+            </div>
             
-            updateSoundControl();
-        }
-
-        // Atualizar controle de som
-        function updateSoundControl() {
-            const control = document.getElementById('soundControl');
-            if (isSoundEnabled) {
-                control.innerHTML = '🔊';
-                control.classList.remove('muted');
-                control.title = 'Desativar Som';
-            } else {
-                control.innerHTML = '🔇';
-                control.classList.add('muted');
-                control.title = 'Ativar Som';
-            }
-        }
-
-        // Mostrar notificação
-        function showNotification() {
-            const notification = document.getElementById('soundNotification');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Verificar preferência salva
-        function checkSavedPreference() {
-            const saved = localStorage.getItem('soundEnabled');
-            if (saved === 'true') {
-                // Usuário já ativou som antes
-                enableSound();
-            }
-        }
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar preferência salva
-            checkSavedPreference();
-            
-            // Event listeners
-            document.getElementById('enableSoundBtn').addEventListener('click', enableSound);
-            document.getElementById('soundControl').addEventListener('click', toggleSound);
-            
-            // Inicializar player quando disponível
-            setTimeout(initializeVimeoPlayer, 1000);
-        });
-    </script>
-</body>
-</html>
+            <div class="community-grid">
+                <div class="community-card">
+                    <h3 class="community-title">Sala Branca (20.000 Membros)</h3>
+                    <a href="https://discord.com/invite/sala-branca-legacy-vision-25000-1157739
