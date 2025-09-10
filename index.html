@@ -842,4 +842,238 @@
             <div class="community-grid">
                 <div class="community-card">
                     <h3 class="community-title">Sala Branca (20.000 Membros)</h3>
-                    <a href="https://discord.com/invite/sala-branca-legacy-vision-25000-1157739
+                    <a href="https://discord.com/invite/sala-branca-legacy-vision-25000-1157739006281404417" 
+                       target="_blank" 
+                       class="community-link">
+                        Entrar na Sala Branca
+                    </a>
+                </div>
+                
+                <div class="community-card">
+                    <h3 class="community-title">Youtube Academy (2.000 Membros)</h3>
+                    <a href="https://discord.com/invite/youtube-academy-seraf-2000-1185411777681432636" 
+                       target="_blank" 
+                       class="community-link">
+                        Entrar na Youtube Academy
+                    </a>
+                </div>
+                
+                <div class="community-card">
+                    <h3 class="community-title">Grupão Whatsapp para Networking</h3>
+                    <a href="https://chat.whatsapp.com/Ccwxt9BLoKCHaR0rTYr2nT" 
+                       target="_blank" 
+                       class="community-link">
+                        Entrar no Grupo do WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: WhatsApp -->
+        <section class="content-section">
+            <div class="section-header">
+                <span class="section-emoji">💬</span>
+                <h2 class="section-title">Me chame no WhatsApp</h2>
+            </div>
+            <a href="https://api.whatsapp.com/send/?phone=5541999391616&text=Opa%21+tenho+interesse+em+crescer+no+Youtube+e+queria+tirar+algumas+dúvidas&type=phone_number&app_absent=0" 
+               target="_blank" 
+               class="primary-button button-whatsapp ripple-effect">
+                Chamar no WhatsApp
+            </a>
+        </section>
+
+        <!-- Member Area -->
+        <section class="member-area">
+            <h3>Área de Membros - Legacy Vision Academy</h3>
+            <a href="https://legacyvision.academy" 
+               target="_blank" 
+               class="primary-button button-members ripple-effect">
+                Acessar Área de Membros
+            </a>
+        </section>
+    </div>
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    <script>
+        let isSoundEnabled = false;
+        let vimeoPlayer = null;
+
+        // Inicializar player Vimeo
+        function initializeVimeoPlayer() {
+            const iframe = document.getElementById('vimeo-player');
+            vimeoPlayer = new Vimeo.Player(iframe);
+            
+            // Configurar volume inicial
+            if (isSoundEnabled) {
+                vimeoPlayer.setVolume(1);
+            } else {
+                vimeoPlayer.setVolume(0);
+            }
+        }
+
+        // Ativar som
+        function enableSound() {
+            isSoundEnabled = true;
+            
+            // Esconder overlay
+            const overlay = document.getElementById('soundOverlay');
+            overlay.classList.add('hidden');
+            
+            // Ativar som no vídeo
+            if (vimeoPlayer) {
+                vimeoPlayer.setVolume(1);
+            }
+            
+            // Atualizar controle de som
+            updateSoundControl();
+            
+            // Mostrar notificação
+            showNotification();
+            
+            // Salvar preferência
+            localStorage.setItem('soundEnabled', 'true');
+        }
+
+        // Alternar som
+        function toggleSound() {
+            if (isSoundEnabled) {
+                // Desativar som
+                isSoundEnabled = false;
+                if (vimeoPlayer) {
+                    vimeoPlayer.setVolume(0);
+                }
+                localStorage.setItem('soundEnabled', 'false');
+            } else {
+                // Ativar som
+                isSoundEnabled = true;
+                if (vimeoPlayer) {
+                    vimeoPlayer.setVolume(1);
+                }
+                localStorage.setItem('soundEnabled', 'true');
+                showNotification();
+            }
+            
+            updateSoundControl();
+        }
+
+        // Atualizar controle de som
+        function updateSoundControl() {
+            const control = document.getElementById('soundControl');
+            if (isSoundEnabled) {
+                control.innerHTML = '🔊';
+                control.classList.remove('muted');
+                control.title = 'Desativar Som';
+            } else {
+                control.innerHTML = '🔇';
+                control.classList.add('muted');
+                control.title = 'Ativar Som';
+            }
+        }
+
+        // Mostrar notificação
+        function showNotification() {
+            const notification = document.getElementById('soundNotification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Verificar preferência salva
+        function checkSavedPreference() {
+            const saved = localStorage.getItem('soundEnabled');
+            if (saved === 'true') {
+                // Usuário já ativou som antes
+                enableSound();
+            }
+        }
+
+        // Sistema de partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles-container');
+            
+            function createParticle() {
+                const particle = document.createElement('div');
+                const size = Math.random() * 8 + 4;
+                const type = Math.floor(Math.random() * 3) + 1;
+                
+                particle.classList.add('particle', `particle-${type}`);
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, type === 1 ? 15000 : type === 2 ? 18000 : 12000);
+            }
+            
+            setInterval(createParticle, 800);
+        }
+
+        // Efeito ripple nos botões
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+            
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Animação de scroll reveal
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('revealed');
+                }
+            });
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar preferência salva
+            checkSavedPreference();
+            
+            // Criar partículas
+            createParticles();
+            
+            // Event listeners
+            document.getElementById('enableSoundBtn').addEventListener('click', enableSound);
+            document.getElementById('soundControl').addEventListener('click', toggleSound);
+            
+            // Adicionar efeito ripple a todos os botões
+            document.querySelectorAll('.ripple-effect').forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
+            
+            // Adicionar scroll reveal
+            window.addEventListener('scroll', handleScrollReveal);
+            handleScrollReveal();
+            
+            // Inicializar player quando disponível
+            setTimeout(initializeVimeoPlayer, 1000);
+        });
+    </script>
+</body>
+</html>
