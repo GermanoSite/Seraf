@@ -1013,8 +1013,11 @@
         function checkSavedPreference() {
             const saved = localStorage.getItem('soundEnabled');
             if (saved === 'true') {
-                // Usuário já ativou som antes
-                enableSound();
+                // Usuário já ativou som antes - esconder overlay imediatamente
+                const overlay = document.getElementById('soundOverlay');
+                overlay.classList.add('hidden');
+                isSoundEnabled = true;
+                updateSoundControl();
             } else {
                 // Se não há preferência salva, esconder overlay após 5 segundos
                 setTimeout(() => {
